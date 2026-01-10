@@ -1,0 +1,22 @@
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: '##GENERATED ZDNV_PROD'
+define root view entity ZR_DNV_PROD
+  as select from zdnv_prod
+{
+  key id as ID,
+  product_name as ProductName,
+  price as Price,
+  stock as Stock,
+  inv_date as InvDate,
+  @Semantics.user.createdBy: true
+  local_created_by as LocalCreatedBy,
+  @Semantics.systemDateTime.createdAt: true
+  local_created_at as LocalCreatedAt,
+  @Semantics.user.localInstanceLastChangedBy: true
+  local_last_changed_by as LocalLastChangedBy,
+  @Semantics.systemDateTime.localInstanceLastChangedAt: true
+  local_last_changed_at as LocalLastChangedAt,
+  @Semantics.systemDateTime.lastChangedAt: true
+  last_changed_at as LastChangedAt
+  
+}
