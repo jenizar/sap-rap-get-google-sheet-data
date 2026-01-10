@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service definition for ZC_DNV_PROD'
+define service ZUI_DNV_PROD_O4 {
+  expose ZC_DNV_PROD;
+}
