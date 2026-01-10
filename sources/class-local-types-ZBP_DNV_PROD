@@ -1,0 +1,99 @@
+CLASS LHC_ZR_DNV_PROD DEFINITION INHERITING FROM CL_ABAP_BEHAVIOR_HANDLER.
+  PRIVATE SECTION.
+    METHODS:
+      GET_GLOBAL_AUTHORIZATIONS FOR GLOBAL AUTHORIZATION
+        IMPORTING
+           REQUEST requested_authorizations FOR ZR_DNV_PROD
+        RESULT result.
+
+    METHODS getdata_gsheet FOR MODIFY
+      IMPORTING keys FOR ACTION ZR_DNV_PROD~getdata_gsheet.
+ENDCLASS.
+
+CLASS LHC_ZR_DNV_PROD IMPLEMENTATION.
+  METHOD GET_GLOBAL_AUTHORIZATIONS.
+  ENDMETHOD.
+
+  METHOD getdata_gsheet.
+  DATA: lo_http_client TYPE REF TO if_http_client,
+        lv_service TYPE string.
+
+  DATA : ls_inv TYPE zdnv_prod,
+         lt_inv TYPE STANDARD TABLE OF zdnv_prod.
+
+  DATA: lv_result TYPE string.
+
+  TYPES : BEGIN OF ty_prod,
+           productname TYPE zdnv_prod-product_name,
+           price TYPE zdnv_prod-price,
+           stock TYPE zdnv_prod-stock,
+           date TYPE zdnv_prod-inv_date,
+          END OF ty_prod.
+
+  Data : ls_prod type ty_prod,
+         lt_prod type standard table of ty_prod.
+
+  Data lr_json_deserializer type ref to cl_trex_json_deserializer.
+
+   lv_service = 'http://192.168.0.18:5000'.
+*** Use CL_HTTP_CLIENT to consume the OData service using the method "create_by_url"
+
+DELETE FROM zdnv_prod.
+
+   CALL METHOD cl_http_client=>create_by_url(
+       EXPORTING
+         url                = lv_service
+       IMPORTING
+         client             = lo_http_client
+       EXCEPTIONS
+         argument_not_found = 1
+         plugin_not_active  = 2
+         internal_error     = 3
+       OTHERS             = 4 ).
+
+*** Call the following method to autheticate the user/password and client for the remote connection.
+    CALL METHOD LO_HTTP_CLIENT->AUTHENTICATE(
+       EXPORTING
+        CLIENT = '001'
+        USERNAME = 'DEVELOPER'
+        PASSWORD = 'ABAPtr2023#00'
+        LANGUAGE = ''
+        ).
+**** Send the request
+     lo_http_client->send(
+       EXCEPTIONS
+         http_communication_failure = 1
+         http_invalid_state         = 2 ).
+
+*** Receive the respose
+     lo_http_client->receive(
+        EXCEPTIONS
+          http_communication_failure = 1
+          http_invalid_state         = 2
+          http_processing_failed     = 3 ).
+
+*** Read the result
+     CLEAR lv_result.
+      lv_result = lo_http_client->response->get_cdata( ).
+
+* deserialize JSON string json into internal table lt_flight doing camelCase to ABAP like field name mapping
+     /ui2/cl_json=>deserialize( EXPORTING json = lv_result pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = lt_prod ).
+
+   LOOP at lt_prod INTO ls_prod.
+     ls_inv-product_name = ls_prod-productname.
+     ls_inv-price = ls_prod-price.
+     ls_inv-stock = ls_prod-stock.
+     ls_inv-inv_date = ls_prod-date.
+     GET TIME STAMP FIELD ls_inv-local_created_at.
+     ls_inv-client = sy-mandt.
+     ls_inv-id = cl_system_uuid=>create_uuid_x16_static( ).
+     ls_inv-local_created_by = sy-uname.
+     GET TIME STAMP FIELD ls_inv-local_last_changed_at.
+     GET TIME STAMP FIELD ls_inv-last_changed_at.
+     ls_inv-local_last_changed_by = sy-uname.
+      APPEND ls_inv TO lt_inv.
+   ENDLOOP.
+
+   INSERT zdnv_prod FROM TABLE @lt_inv.
+  ENDMETHOD.
+ENDCLASS.
