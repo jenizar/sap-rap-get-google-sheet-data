@@ -1,0 +1,79 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'ZC_DNV_PROD', 
+    typeNamePlural: 'ZC_DNV_PRODs'
+  }
+}
+annotate view ZC_DNV_PROD with
+{
+  @UI.facet: [ {
+    id: 'idIdentification', 
+    type: #IDENTIFICATION_REFERENCE, 
+    label: 'ZC_DNV_PROD', 
+    position: 10 
+  } ]
+  
+   @UI.lineItem: [ { position: 20, type: #FOR_ACTION, label: 'Get Data Google Sheet', dataAction: 'getdata_gsheet' } ]  
+  
+  @UI.hidden: true
+  ID;
+  
+  @UI.lineItem: [ {
+    position: 10 , 
+    importance: #MEDIUM, 
+    label: 'ProductName'
+  } ]
+  @UI.identification: [ {
+    position: 10 , 
+    label: 'ProductName'
+  } ]
+  ProductName;
+  
+  @UI.lineItem: [ {
+    position: 20 , 
+    importance: #MEDIUM, 
+    label: 'Price'
+  } ]
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'Price'
+  } ]
+  Price;
+  
+  @UI.lineItem: [ {
+    position: 30 , 
+    importance: #MEDIUM, 
+    label: 'Stock'
+  } ]
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Stock'
+  } ]
+  Stock;
+  
+  @UI.lineItem: [ {
+    position: 40 , 
+    importance: #MEDIUM, 
+    label: 'InvDate'
+  } ]
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'InvDate'
+  } ]
+  InvDate; 
+
+  @UI.lineItem: [ {
+    position: 50 , 
+    importance: #MEDIUM, 
+    label: 'Created At'
+  } ]
+  @UI.identification: [ {
+    position: 50 , 
+    label: 'Created At'
+  } ]
+  LocalCreatedAt;
+  
+  @UI.hidden: true
+  LocalLastChangedAt;
+}
