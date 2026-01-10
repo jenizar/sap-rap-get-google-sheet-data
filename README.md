@@ -3,6 +3,8 @@ SAP RAP: Get Google Sheet data
 
 Demo :
 
+
+
 ![alt text](https://github.com/jenizar/sap-rap-get-google-sheet-data/blob/main/screenshots/pic1.png)
 
 ![alt text](https://github.com/jenizar/sap-rap-get-google-sheet-data/blob/main/screenshots/pic2.png)
@@ -11,3 +13,4 @@ Demo :
 
 Reference:
 
+https://sapcloudapps.wordpress.com/2026/01/11/sap-rap-get-google-sheet-data/
