@@ -1,0 +1,16 @@
+@AccessControl.authorizationCheck: #CHECK
+@Metadata.allowExtensions: true
+@EndUserText.label: 'Projection View for ZR_DNV_PROD'
+define root view entity ZC_DNV_PROD
+  provider contract transactional_query
+  as projection on ZR_DNV_PROD
+{
+  key ID,
+  ProductName,
+  Price,
+  Stock,
+  InvDate,
+  LocalCreatedAt,
+  LocalLastChangedAt
+  
+}
