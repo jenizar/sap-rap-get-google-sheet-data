@@ -1,0 +1,50 @@
+managed implementation in class ZBP_DNV_PROD unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_DNV_PROD
+persistent table zdnv_prod
+draft table ZDNV_PROD_D
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master( global )
+
+{
+  field ( readonly )
+   ID,
+   LocalCreatedAt,
+   LocalCreatedBy,
+   LastChangedAt,
+   LocalLastChangedAt,
+   LocalLastChangedBy;
+
+  field ( numbering : managed )
+   ID;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  static action getdata_gsheet;
+
+  mapping for ZDNV_PROD
+  {
+    ID = id;
+    ProductName = product_name;
+    Price = price;
+    Stock = stock;
+    InvDate = inv_date;
+    LocalCreatedBy = local_created_by;
+    LocalCreatedAt = local_created_at;
+    LocalLastChangedBy = local_last_changed_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+  }
+}
