@@ -1,0 +1,20 @@
+@EndUserText.label : 'Inventory Stock'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table zdnv_prod {
+
+  key client            : abap.clnt not null;
+  key id                : sysuuid_x16 not null;
+  product_name          : abap.char(20);
+  price                 : abap.int4;
+  stock                 : abap.int2;
+  inv_date              : abap.char(8);
+  local_created_by      : abp_creation_user;
+  local_created_at      : abp_creation_tstmpl;
+  local_last_changed_by : abp_locinst_lastchange_user;
+  local_last_changed_at : abp_locinst_lastchange_tstmpl;
+  last_changed_at       : abp_lastchange_tstmpl;
+
+}
